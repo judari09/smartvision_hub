@@ -1,0 +1,9 @@
+path: . # dataset root dir
+train: data/dataset/train # train images (relative to 'path') 3516 images
+val: data/dataset/val # val images (relative to 'path') 276 images
+
+# Classes
+names:
+  0: back_bumper
+  1: back_door
+  2: back_glass
