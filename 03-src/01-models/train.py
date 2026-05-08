@@ -11,72 +11,37 @@ from pathlib import Path
 
 import albumentations as A
 import mlflow
+import yaml
 from ultralytics import YOLO, settings
 
 # ── Rutas ────────────────────────────────────────────────────────────────────
-PROJECT_ROOT = Path(__file__).parent
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CONFIG_YAML = REPO_ROOT / "01-config" / "train_config.yaml"
 
 # El archivo data.yaml debe estar versionado con DVC.
 # Antes de entrenar: `dvc pull`
-DATA_YAML = PROJECT_ROOT / "01-config" / "dataset.yaml"
+DATA_YAML = REPO_ROOT / "01-config" / "dataset.yaml"
 
-# ── Configuración de entrenamiento ───────────────────────────────────────────
-TRAIN_CFG: dict = dict(
-    # Modelo base
-    model="yolo11n.pt",
-    data=str(DATA_YAML),
-    # Ciclo de entrenamiento
-    epochs=15,
-    patience=30,        # early stopping sin mejora en val/mAP50-95
-    batch=16,
-    imgsz=640,
-    # Hardware
-    device=0,           # GPU 0; usar "cpu" o [0, 1] para multi-GPU
-    workers=8,
-    # Optimizador
-    optimizer="AdamW",
-    lr0=1e-3,
-    lrf=1e-2,           # lr_final = lr0 * lrf
-    momentum=0.937,
-    weight_decay=5e-4,
-    warmup_epochs=3,
-    # Augmentaciones geométricas integradas de Ultralytics
-    degrees=5.0,        # rotación leve (las placas rara vez aparecen muy inclinadas)
-    translate=0.1,
-    scale=0.6,          # zoom out agresivo para aprender placas lejanas
-    shear=2.0,
-    perspective=0.0005,
-    fliplr=0.5,
-    flipud=0.0,         # las placas nunca aparecen invertidas verticalmente
-    mosaic=0.8,
-    mixup=0.1,
-    copy_paste=0.0,
-    # Augmentaciones de color integradas de Ultralytics
-    hsv_h=0.015,
-    hsv_s=0.7,
-    hsv_v=0.4,
-    # Salida
-    project="vehicles_detection",
-    name="yolo11n_run",
-    exist_ok=False,
-    save_period=10,     # checkpoint cada N épocas
-    plots=True,
-    val=True,
-    verbose=True,
-)
+
+def load_yaml_config(config_path: Path) -> dict:
+    with config_path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+_config = load_yaml_config(CONFIG_YAML)
+TRAIN_CFG: dict = _config["train"]
+DATA_YAML = Path(TRAIN_CFG["data"])
+if not DATA_YAML.is_absolute():
+    DATA_YAML = REPO_ROOT / DATA_YAML
+TRAIN_CFG["data"] = str(DATA_YAML)
 
 # ── Configuración de MLflow ──────────────────────────────────────────────────
-MLFLOW_CFG: dict = dict(
-    tracking_uri=str(PROJECT_ROOT / "mlruns"),
-    experiment_name="license-plate-detection",
-    run_name=TRAIN_CFG["name"],
-    tags={
-        "model": TRAIN_CFG["model"],
-        "dataset": "placas-colombia-v1",
-        "framework": "ultralytics",
-        "augmentation": "albumentations-severe",
-    },
-)
+MLFLOW_CFG: dict = _config["mlflow"]
+tracking_uri = Path(MLFLOW_CFG["tracking_uri"])
+if not tracking_uri.is_absolute():
+    tracking_uri = REPO_ROOT / tracking_uri
+MLFLOW_CFG["tracking_uri"] = str(tracking_uri)
+MLFLOW_CFG["run_name"] = TRAIN_CFG.get("name", MLFLOW_CFG.get("run_name"))
 
 
 # ── Pipeline de aumentado Albumentations ─────────────────────────────────────
@@ -209,23 +174,22 @@ def train() -> None:
             **{k: v for k, v in TRAIN_CFG.items() if k != "model"},
             augmentations=build_augmentation_pipeline(),
         )
-        
+
         # ── Registrar modelo en MLflow ───────────────────────────────────────
         # Obtener el run_id actual
         run_id = mlflow.active_run().info.run_id
-        
+
         # URI del modelo YOLO (se guarda automáticamente como "model")
         model_uri = f"runs:/{run_id}/model"
-        
+
         # Registrar en el Model Registry
         registered_model = mlflow.register_model(
-            model_uri=model_uri,
-            name="vehicle_detection"  # Nombre en el registry
+            model_uri=model_uri, name=MLFLOW_CFG["name_registry"]  # Nombre en el registry
         )
-        
+
         print(f"Modelo registrado: {registered_model.name}")
         print(f"Versión: {registered_model.version}")
-        
+
 
 if __name__ == "__main__":
     train()

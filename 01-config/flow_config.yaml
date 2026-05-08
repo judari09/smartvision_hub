@@ -1,0 +1,17 @@
+prepare:
+  input_dir: data/raw
+  output_dir: data/prepared
+  carpeta_imagenes: images_prueba
+  class_map:
+    car: 0
+    motorcycle: 1
+    bus: 2
+    truck: 3
+  default_class_id: 0
+  polygon_4pt_as_bbox: true
+split:
+  images: data/prepared/images
+  labels: data/prepared/labels
+  train: data/split/train
+  val: data/split/val
+  split_ratio: 0.2

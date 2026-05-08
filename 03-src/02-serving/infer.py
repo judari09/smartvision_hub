@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 
-model = YOLO("models/", task="detect")
+model = YOLO("04-models/yolo26n.pt", task="detect", verbose=False)
 
 def infer(image_path: str):
     results = model(image_path)

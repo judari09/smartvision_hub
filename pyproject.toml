@@ -11,6 +11,8 @@ dependencies = [
     "mlflow>=3.11.1",
     "opencv-python>=4.13.0.92",
     "pip>=26.1",
+    "prefect>=3.7.0",
     "prometheus-client>=0.25.0",
+    "PyYAML>=6.0",
     "ultralytics>=8.4.41",
 ]
