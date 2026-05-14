@@ -35,7 +35,7 @@ train:
   verbose: true
 
 mlflow:
-  tracking_uri: mlruns
+  backend_store_uri: sqlite:///mlflow.db
   experiment_name: license-plate-detection
   run_name: yolo11n_run
   name_registry: vehicle_detection

@@ -149,7 +149,7 @@ def configure_mlflow() -> None:
     El callback nativo de Ultralytics reutiliza el active_run() si ya existe,
     por lo que arrancar el run aquí permite añadir tags antes del entrenamiento.
     """
-    os.environ["MLFLOW_TRACKING_URI"] = MLFLOW_CFG["tracking_uri"]
+    os.environ["MLFLOW_BACKEND_STORE_URI"] = MLFLOW_CFG["backend_store_uri"]
     os.environ["MLFLOW_EXPERIMENT_NAME"] = MLFLOW_CFG["experiment_name"]
     os.environ["MLFLOW_RUN"] = MLFLOW_CFG["run_name"]
     # No llamar settings.reset() — eliminaría el flag mlflow=True

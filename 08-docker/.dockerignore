@@ -1,0 +1,21 @@
+# Carpetas de volúmenes que se montarán desde el host
+02-data
+dataset
+mlruns
+04-models
+
+# Otros archivos que no necesita la imagen
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv
+tmp/
+.DS_Store
+*.log
+.env
