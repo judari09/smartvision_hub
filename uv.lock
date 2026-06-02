@@ -3342,6 +3342,15 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-ml-py"
+version = "13.595.45"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/49/c29f6e30d8662d2e94fef17739ea7309cc76aba269922ae999e4cc07f268/nvidia_ml_py-13.595.45.tar.gz", hash = "sha256:c9f34897fe0441ff35bc8f35baf80f830a20b0f4e6ce71e0a325bc0e66acf079", size = 50780, upload-time = "2026-03-19T16:59:44.956Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8a/24/fc256107d23597fa33d319505ce77160fa1a2349c096d01901ffc7cb7fc4/nvidia_ml_py-13.595.45-py3-none-any.whl", hash = "sha256:b65a7977f503d56154b14d683710125ef93594adb63fbf7e559336e3318f1376", size = 51776, upload-time = "2026-03-19T16:59:43.603Z" },
+]
+
+[[package]]
 name = "nvidia-nccl-cu13"
 version = "2.28.9"
 source = { registry = "https://pypi.org/simple" }
@@ -5280,7 +5289,8 @@ dependencies = [
     { name = "dvc", extra = ["all"] },
     { name = "fastapi", extra = ["standard"] },
     { name = "mlflow" },
-    { name = "opencv-python" },
+    { name = "nvidia-ml-py" },
+    { name = "opencv-python-headless" },
     { name = "pip" },
     { name = "prefect" },
     { name = "prometheus-client" },
@@ -5294,7 +5304,8 @@ requires-dist = [
     { name = "dvc", extras = ["all"], specifier = ">=3.67.1" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.136.1" },
     { name = "mlflow", specifier = ">=3.11.1" },
-    { name = "opencv-python", specifier = ">=4.13.0.92" },
+    { name = "nvidia-ml-py", specifier = ">=12.0.0" },
+    { name = "opencv-python-headless", specifier = ">=4.13.0.92" },
     { name = "pip", specifier = ">=26.1" },
     { name = "prefect", specifier = ">=3.7.0" },
     { name = "prometheus-client", specifier = ">=0.25.0" },
