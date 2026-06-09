@@ -63,12 +63,11 @@ export default function ImageWidget({ imageSrc, processedSrc = imageSrc, points 
                             {points.length > 0 && (
                                 <div className="image-overlay">
                                     <div className="image-box" style={getBoxStyle(points)} />
-                                    }
                                 </div>
                             )}
                         </div>
                 </div>
             </div>
         </div>
-  );
+    );
 }
