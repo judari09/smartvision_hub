@@ -1,0 +1,178 @@
+:root {
+  --flow-form-bg: #ffffff;
+  --flow-form-border: #e5e7eb;
+  --flow-form-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --flow-form-text: #111827;
+  --flow-form-muted: #4b5563;
+  --flow-form-input-bg: #f8fafc;
+  --flow-form-input-border: #d1d5db;
+  --flow-form-placeholder: #9ca3af;
+  --flow-form-primary: #6366f1;
+  --flow-form-primary-hover: #4f46e5;
+  --flow-form-success: #d1fae5;
+  --flow-form-success-text: #065f46;
+  --flow-form-error: #fee2e2;
+  --flow-form-error-text: #991b1b;
+  --flow-form-radius: 18px;
+  --flow-form-radius-sm: 14px;
+  --flow-form-radius-pill: 999px;
+  --flow-form-font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.flow-config-form-container {
+  max-width: 780px;
+  margin: 24px auto;
+  padding: 26px;
+  background: var(--flow-form-bg);
+  border-radius: var(--flow-form-radius);
+  border: 1px solid var(--flow-form-border);
+  box-shadow: var(--flow-form-shadow);
+  color: var(--flow-form-text);
+  font-family: var(--flow-form-font);
+}
+
+.flow-config-form-header {
+  margin-bottom: 22px;
+}
+
+.flow-config-form-container h2 {
+  margin: 0 0 12px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.flow-config-form-content {
+  margin-bottom: 18px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--flow-form-muted);
+}
+
+.flow-config-form {
+  width: 100%;
+}
+
+.flow-config-form ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: grid;
+  gap: 18px;
+}
+
+.flow-config-form ul > h3,
+.flow-config-form ul > p {
+  margin: 0;
+}
+
+.flow-config-form h3 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: var(--flow-form-text);
+}
+
+.flow-config-form p {
+  font-size: 0.95rem;
+  color: var(--flow-form-muted);
+}
+
+.flow-config-form li {
+  display: grid;
+  gap: 10px;
+}
+
+.flow-config-form label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--flow-form-text);
+}
+
+.flow-config-form input,
+.flow-config-form textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  color: var(--flow-form-text);
+  background: var(--flow-form-input-bg);
+  border: 1px solid var(--flow-form-input-border);
+  border-radius: var(--flow-form-radius-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--flow-form-font);
+}
+
+.flow-config-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.flow-config-form input:focus,
+.flow-config-form textarea:focus {
+  outline: none;
+  border-color: var(--flow-form-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+  background: #ffffff;
+}
+
+.flow-config-form input::placeholder,
+.flow-config-form textarea::placeholder {
+  color: var(--flow-form-placeholder);
+  white-space: pre-wrap;
+}
+
+.flow-config-form-button {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: var(--flow-form-primary);
+  border: none;
+  border-radius: var(--flow-form-radius-sm);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.flow-config-form-button:hover:not(:disabled) {
+  background: var(--flow-form-primary-hover);
+  transform: translateY(-1px);
+}
+
+.flow-config-form-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.flow-config-form-button:disabled {
+  background: var(--flow-form-input-border);
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.message.success {
+  background: var(--flow-form-success);
+  color: var(--flow-form-success-text);
+  border: 1px solid #a7f3d0;
+}
+
+.message.error {
+  background: var(--flow-form-error);
+  color: var(--flow-form-error-text);
+  border: 1px solid #fecaca;
+}
+
+@media (max-width: 720px) {
+  .flow-config-form-container {
+    margin: 16px;
+    padding: 18px;
+  }
+}

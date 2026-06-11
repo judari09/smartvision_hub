@@ -3,6 +3,7 @@ import heroImage from "./assets/hero.png";
 import ImageWidget from "./components/inference/imagewidget.jsx";
 import InferenceConfigWidget from "./components/inference/inferenceconfigwidget.jsx";
 import DatasetConfigForm from "./components/config/datasetconfigform.jsx";
+import FlowConfigForm from "./components/config/flowconfigform.jsx";
 import Sidebar from "./components/sidebar.jsx";
 import './index.css';
 
@@ -19,6 +20,7 @@ function App() {
         />
         <InferenceConfigWidget />
         <DatasetConfigForm />
+        <FlowConfigForm />
       </main>
     </div>
   );
