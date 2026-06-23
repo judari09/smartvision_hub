@@ -1,28 +1,27 @@
-:root {
+.flow-config-form-container {
   --flow-form-bg: #ffffff;
-  --flow-form-border: #e5e7eb;
+  --flow-form-border: #e2f8f7;
   --flow-form-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-  --flow-form-text: #111827;
-  --flow-form-muted: #4b5563;
+  --flow-form-text: #0f172a;
+  --flow-form-muted: #475569;
   --flow-form-input-bg: #f8fafc;
-  --flow-form-input-border: #d1d5db;
-  --flow-form-placeholder: #9ca3af;
-  --flow-form-primary: #6366f1;
-  --flow-form-primary-hover: #4f46e5;
-  --flow-form-success: #d1fae5;
-  --flow-form-success-text: #065f46;
+  --flow-form-input-border: #cbd5e1;
+  --flow-form-placeholder: #94a3b8;
+  --flow-form-primary: #36ecde;
+  --flow-form-primary-hover: #28cbbe;
+  --flow-form-success: #88f1e8;
+  --flow-form-success-text: #0f766e;
   --flow-form-error: #fee2e2;
-  --flow-form-error-text: #991b1b;
-  --flow-form-radius: 18px;
+  --flow-form-error-text: #b91c1c;
+  --flow-form-radius: 20px;
   --flow-form-radius-sm: 14px;
-  --flow-form-radius-pill: 999px;
   --flow-form-font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .flow-config-form-container {
-  max-width: 780px;
+  max-width: 960px;
   margin: 24px auto;
-  padding: 26px;
+  padding: 32px;
   background: var(--flow-form-bg);
   border-radius: var(--flow-form-radius);
   border: 1px solid var(--flow-form-border);
@@ -32,20 +31,21 @@
 }
 
 .flow-config-form-header {
-  margin-bottom: 22px;
+  margin-bottom: 26px;
 }
 
 .flow-config-form-container h2 {
-  margin: 0 0 12px;
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  margin: 0 0 10px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--flow-form-primary);
 }
 
 .flow-config-form-content {
-  margin-bottom: 18px;
-  font-size: 0.98rem;
-  line-height: 1.7;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  line-height: 1.75;
   color: var(--flow-form-muted);
 }
 
@@ -56,29 +56,41 @@
 .flow-config-form ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 0 0 22px;
   display: grid;
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
 }
 
-.flow-config-form ul > h3,
-.flow-config-form ul > p {
-  margin: 0;
-}
-
-.flow-config-form h3 {
-  font-size: 1.2rem;
-  margin: 0;
+.flow-config-form ul > h3 {
+  grid-column: 1 / -1;
+  margin: 24px 0 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(54, 236, 222, 0.18);
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--flow-form-text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.flow-config-form p {
-  font-size: 0.95rem;
+.flow-config-form ul > h3:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+.flow-config-form ul > p {
+  grid-column: 1 / -1;
+  margin: 0;
   color: var(--flow-form-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .flow-config-form li {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -90,16 +102,17 @@
 }
 
 .flow-config-form input,
-.flow-config-form textarea {
+.flow-config-form textarea,
+.flow-config-form select {
   width: 100%;
   min-height: 44px;
   padding: 12px 14px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--flow-form-text);
   background: var(--flow-form-input-bg);
   border: 1px solid var(--flow-form-input-border);
   border-radius: var(--flow-form-radius-sm);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   font-family: var(--flow-form-font);
 }
 
@@ -108,32 +121,73 @@
   resize: vertical;
 }
 
+.flow-config-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  padding-right: 44px;
+}
+
+.flow-config-form input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 8px;
+  appearance: none;
+  background: var(--flow-form-input-bg);
+  border: 2px solid var(--flow-form-input-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  position: relative;
+}
+
+.flow-config-form input[type="checkbox"]:checked {
+  background: var(--flow-form-primary);
+  border-color: var(--flow-form-primary);
+}
+
+.flow-config-form input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 .flow-config-form input:focus,
-.flow-config-form textarea:focus {
+.flow-config-form textarea:focus,
+.flow-config-form select:focus {
   outline: none;
   border-color: var(--flow-form-primary);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 4px rgba(54, 236, 222, 0.18);
   background: #ffffff;
 }
 
 .flow-config-form input::placeholder,
 .flow-config-form textarea::placeholder {
   color: var(--flow-form-placeholder);
-  white-space: pre-wrap;
 }
 
 .flow-config-form-button {
+  grid-column: 1 / -1;
   width: 100%;
-  min-height: 46px;
-  padding: 12px 16px;
+  min-height: 48px;
+  padding: 14px 18px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: white;
   background: var(--flow-form-primary);
   border: none;
   border-radius: var(--flow-form-radius-sm);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 24px rgba(54, 236, 222, 0.18);
+  margin-top: 10px;
 }
 
 .flow-config-form-button:hover:not(:disabled) {
@@ -148,11 +202,13 @@
 .flow-config-form-button:disabled {
   background: var(--flow-form-input-border);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .message {
+  grid-column: 1 / -1;
   margin-top: 16px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 500;
@@ -170,9 +226,35 @@
   border: 1px solid #fecaca;
 }
 
+@media (max-width: 960px) {
+  .flow-config-form ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
   .flow-config-form-container {
     margin: 16px;
-    padding: 18px;
+    padding: 22px;
+  }
+
+  .flow-config-form ul {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .flow-config-form-container h2 {
+    font-size: 1.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .flow-config-form-container {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .flow-config-form-button {
+    min-height: 46px;
   }
 }

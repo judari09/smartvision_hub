@@ -14,9 +14,14 @@ import {
   Wind
 } from "lucide-react";
 
-export default function Sidebar() {
+export default function Sidebar({ selectedPage, onNavigate }) {
   const [collapsed, setCollapsed] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const navigate = (page) => {
+    setSettingsOpen(page === "settings" ? !settingsOpen : settingsOpen);
+    onNavigate(page);
+  };
 
   return (
     <aside className={collapsed ? "sidebar collapsed" : "sidebar"}>
@@ -40,14 +45,28 @@ export default function Sidebar() {
       <nav>
         <ul>
           <li>
-            <a href="#">
+            <a
+              href="#"
+              className={selectedPage === "inicio" ? "active" : ""}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("inicio");
+              }}
+            >
               <Home size={20} />
               {!collapsed && <span>Inicio</span>}
             </a>
           </li>
 
           <li>
-            <a href="#">
+            <a
+              href="#"
+              className={selectedPage === "inferencia" ? "active" : ""}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("inferencia");
+              }}
+            >
               <BrainCircuit size={20} />
               {!collapsed && <span>Inferencia</span>}
             </a>
@@ -62,7 +81,7 @@ export default function Sidebar() {
               }}
             >
               <Settings size={20} />
-              {!collapsed && <span>Configuracion</span>}
+              {!collapsed && <span>Configuración</span>}
               {!collapsed && (
                 <ChevronDown
                   size={16}
@@ -73,19 +92,40 @@ export default function Sidebar() {
 
             <ul className={settingsOpen ? "submenu open" : "submenu"}>
               <li>
-                <a href="#">
+                <a
+                  href="#"
+                  className={selectedPage === "dataset" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("dataset");
+                  }}
+                >
                   <Database size={18} />
                   {!collapsed && <span>Dataset</span>}
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a
+                  href="#"
+                  className={selectedPage === "flow" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("flow");
+                  }}
+                >
                   <Wind size={18} />
                   {!collapsed && <span>Flow</span>}
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a
+                  href="#"
+                  className={selectedPage === "train" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("train");
+                  }}
+                >
                   <SportShoe size={18} />
                   {!collapsed && <span>Train</span>}
                 </a>

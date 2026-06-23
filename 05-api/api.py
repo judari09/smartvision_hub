@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import yaml
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -170,7 +170,13 @@ async def patch_config(name: str, updates: dict):
 
 
 @app.post("/infer")
-async def run_inference(file: UploadFile = File()):
+async def run_inference(
+    file: UploadFile = File(...),
+    model_path: str | None = Form(None),
+    confidence: float = Form(50),
+    iou: float = Form(50),
+    ttaenabled: bool = Form(False),
+):
     # Guardar el archivo temporalmente en un directorio válido para la plataforma
     from pathlib import Path
     from tempfile import NamedTemporaryFile
@@ -183,8 +189,20 @@ async def run_inference(file: UploadFile = File()):
         tmp.write(await file.read())
 
     try:
-        # Ejecutar inferencia usando la ruta temporal
-        results = infer(str(temp_file_path))
+        # Convertir valores desde la UI (0-100) a rango 0.0-1.0
+        conf_val = float(confidence) / 100.0 if confidence is not None else 0.5
+        iou_val = float(iou) / 100.0 if iou is not None else 0.5
+        model_path = model_path or None
+        tta = bool(ttaenabled)
+
+        # Ejecutar inferencia usando la ruta temporal y parámetros recibidos
+        results = infer(
+            str(temp_file_path),
+            model_path=model_path,
+            conf=conf_val,
+            iou=iou_val,
+            tta=tta,
+        )
     finally:
         try:
             temp_file_path.unlink()

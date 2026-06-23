@@ -1,11 +1,87 @@
+/* Styles for InferenceConfigWidget - focused on the Model Path field */
+.inference-config-widget-container{
+  border: 1px solid #E6E9EE;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ffffff;
+  width: 100%;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.inference-config-widget-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+.inference-config-widget-header p{
+  margin:0;
+  font-weight:600;
+  color:#111827;
+  font-size:0.95rem;
+}
+
+.submenu-toggle{
+  transition: transform .18s ease;
+  color: #6B7280;
+}
+.submenu-toggle.rotated{ transform: rotate(180deg); }
+
+.inference-config-widget-content{ display:block; }
+.inference-config-widget-content.expanded{ display:block; }
+
+.inference-config-model-path{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:12px;
+}
+
+.inference-config-model-path label{
+  font-size:0.875rem;
+  color:#374151;
+}
+
+.inference-config-model-path input[type="text"]{
+  width:100%;
+  padding:9px 12px;
+  border:1px solid #D1D5DB;
+  border-radius:6px;
+  background:#F9FAFB;
+  font-size:0.95rem;
+  color:#111827;
+  transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.inference-config-model-path input[type="text"]::placeholder{
+  color:#9CA3AF;
+}
+
+.inference-config-model-path input[type="text"]:focus{
+  outline: none;
+  border-color: #4F46E5; /* indigo-600 */
+  box-shadow: 0 0 0 4px rgba(79,70,229,0.07);
+  background: #ffffff;
+}
+
+/* Small responsive tweak */
+@media (max-width:420px){
+  .inference-config-widget-container{ padding:10px; }
+  .inference-config-model-path input[type="text"]{ padding:8px 10px; }
+}
 .inference-config-widget-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
-  background-color: #e6e9ec;
-  border-radius: 8px;
-  font-family: 'Hanken Grotesk' 'jetbrains mono',;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  font-family: 'Hanken Grotesk', 'JetBrains Mono', sans-serif;
 }
 
 .inference-config-widget-header {

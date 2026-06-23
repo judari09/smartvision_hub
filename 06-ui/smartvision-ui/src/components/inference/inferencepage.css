@@ -1,0 +1,70 @@
+body {
+  background: #e7f0ff;
+}
+
+.inference-page-container {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.imagewidget-container,
+.inference-config-widget-container {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  padding: 1.5rem;
+}
+
+.inference-page-container > * {
+  min-width: 0;
+}
+
+.inference-button {
+  grid-column: 1 / -1;
+  justify-self: end;
+  align-self: start;
+  padding: 0.95rem 1.8rem;
+  border: none;
+  border-radius: 999px;
+  background: #36ecde;
+  color: #0f172a;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 18px 40px rgba(54, 236, 222, 0.18);
+}
+
+.inference-button:hover,
+.inference-button:focus-visible {
+  transform: translateY(-1px);
+  background-color: #2ac9ba;
+  outline: none;
+}
+
+@media (max-width: 980px) {
+  .inference-page-container {
+    grid-template-columns: 1fr;
+  }
+
+  .inference-button {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 640px) {
+  .inference-page-container {
+    gap: 1rem;
+    padding: 1rem;
+  }
+}

@@ -24,6 +24,10 @@ export default function InferenceConfigWidget() {
                 </a>
             </div>
             <div className={`inference-config-widget-content ${expanded ? "expanded" : ""}`}>
+                <div className="inference-config-model-path">
+                    <label htmlFor="model-path">Ruta del modelo</label>
+                    <input type="text" id="model-path" placeholder="Ingrese la ruta del modelo" />
+                </div>
                 <div className="inference-confidence-slider">
                     <div className="slider-label-row">
                         <span>Confianza</span>
