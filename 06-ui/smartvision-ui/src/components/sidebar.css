@@ -1,24 +1,33 @@
 /* SIDEBAR */
 .sidebar{
-  width:230px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
   background:#e6e9ec;
   color:#2f2f2f;
   padding:20px;
-  transition:0.3s;
+  transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease;
   align-items:center;
+  flex-shrink: 0;
 }
 
 .sidebar-header{
   display:flex;
   align-items:center;
-  justify-content:left;
-  gap:10px;
+  gap:12px;
+  margin-bottom:24px;
 }
 
 .sidebar.collapsed{
-  width:100px;
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
   align-items:center;
   padding:20px;
+}
+
+.sidebar.collapsed .sidebar-header{
+  justify-content:center;
 }
 
 /* SUBMENU */
@@ -61,17 +70,44 @@
 
 /* BOTÓN */
 .toggle-btn{
-  background:#e6e9ec;
-  border:#2f2f2f;
+  background:#ffffff;
+  border:1px solid rgba(47, 47, 47, 0.12);
   color:#36ecde;
   cursor:pointer;
-  margin-bottom:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border-radius:10px;
+  flex-shrink:0;
+  box-shadow:none;
+  transform:none;
+}
+
+.toggle-btn:hover,
+.toggle-btn:focus-visible{
+  background:#f3f4f6;
+  transform:none;
+  box-shadow:none;
+}
+
+.toggle-btn svg{
+  display:block;
+  width:22px;
+  height:22px;
+  color:inherit;
 }
 
 /* LOGO */
 .logo{
-  margin-bottom:30px;
+  margin:0;
   font-size:20px;
+  line-height:1.2;
+  white-space:nowrap;
+  flex:1;
+  min-width:0;
 }
 
 /* MENÚ */

@@ -99,3 +99,16 @@
   box-shadow: 0 0 0 4px rgba(255, 217, 0, 0.08);
   pointer-events: none;
 }
+
+.image-box-label {
+  position: absolute;
+  top: -1.6rem;
+  left: 0;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 217, 0, 0.95);
+  color: #111827;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}

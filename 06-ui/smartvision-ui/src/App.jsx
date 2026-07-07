@@ -9,17 +9,24 @@ import Welcome from "./components/welcome.jsx";
 import './index.css';
 
 function App() {
+  // Current view selected in the main shell.
   const [selectedPage, setSelectedPage] = useState("inicio");
+  // Image currently used by the inference workflow.
+  const [inferenceImage, setInferenceImage] = useState(heroImage);
+
+  // Store a selected local image and expose it to the inference page.
+  const handleImageUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setInferenceImage(imageUrl);
+  };
 
   const renderPage = () => {
     switch (selectedPage) {
       case "inferencia":
-        return (
-          <InferencePage 
-            imageSrc={heroImage}
-            points={[{ x: 0.25, y: 0.3 }, { x: 0.75, y: 0.55 }]}
-          />
-        );
+        return <InferencePage imageSrc={inferenceImage} />;
       case "dataset":
         return <DatasetConfigForm />;
       case "flow":
@@ -34,7 +41,22 @@ function App() {
   return (
     <div className="app-container">
       <Sidebar selectedPage={selectedPage} onNavigate={setSelectedPage} />
-      <main className="main-content">        
+      <main className="main-content">
+        {selectedPage === "inferencia" && (
+          <div className="inference-image-upload-row">
+            <label htmlFor="inference-image-input">Cambiar imagen:</label>
+            <label htmlFor="inference-image-input" className="button secondary-button">
+              Seleccionar imagen
+            </label>
+            <input
+              id="inference-image-input"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
+            />
+          </div>
+        )}
         {renderPage()}
       </main>
     </div>

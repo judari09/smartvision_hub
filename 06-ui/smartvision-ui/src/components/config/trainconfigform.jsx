@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./trainconfigform.css";
 
 export default function TrainConfigForm() {
@@ -54,6 +54,73 @@ export default function TrainConfigForm() {
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+
+    const [initialLoading, setInitialLoading] = useState(true);
+
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                setInitialLoading(true);
+                const res = await fetch("http://localhost:8000/config/train");
+                if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+                const data = await res.json();
+                const t = data.train || {};
+                const m = data.mlflow || {};
+
+                setModel(t.model || model);
+                setData(t.data || data);
+                setEpochs(t.epochs ?? epochs);
+                setPatience(t.patience ?? patience);
+                setBatch(t.batch ?? batch);
+                setImgsz(t.imgsz ?? imgsz);
+                setDevice(t.device ?? device);
+                setWorkers(t.workers ?? workers);
+                setOptimizer(t.optimizer || optimizer);
+                setLr0(t.lr0 ?? lr0);
+                setLrf(t.lrf ?? lrf);
+                setMomentum(t.momentum ?? momentum);
+                setWeightDecay(t.weight_decay ?? weightDecay);
+                setWarmupEpochs(t.warmup_epochs ?? warmupEpochs);
+
+                setDegrees(t.degrees ?? degrees);
+                setTranslate(t.translate ?? translate);
+                setScale(t.scale ?? scale);
+                setShear(t.shear ?? shear);
+                setPerspective(t.perspective ?? perspective);
+                setFliplr(t.fliplr ?? fliplr);
+                setFlipud(t.flipud ?? flipud);
+                setMosaic(t.mosaic ?? mosaic);
+                setMixup(t.mixup ?? mixup);
+                setCopyPaste(t.copy_paste ?? copyPaste);
+                setHsvH(t.hsv_h ?? hsvH);
+                setHsvS(t.hsv_s ?? hsvS);
+                setHsvV(t.hsv_v ?? hsvV);
+
+                setProject(t.project ?? project);
+                setName(t.name ?? name);
+                setExistOk(t.exist_ok ?? existOk);
+                setSavePeriod(t.save_period ?? savePeriod);
+                setPlots(t.plots ?? plots);
+                setVal(t.val ?? val);
+                setVerbose(t.verbose ?? verbose);
+
+                setBackendStoreUri(m.backend_store_uri || backendStoreUri);
+                setExperimentName(m.experiment_name || experimentName);
+                setRunName(m.run_name || runName);
+                setNameRegistry(m.name_registry || nameRegistry);
+                setMlflowModel(m.tags?.model || mlflowModel);
+                setMlflowDataset(m.tags?.dataset || mlflowDataset);
+                setMlflowFramework(m.tags?.framework || mlflowFramework);
+                setMlflowAugmentation(m.tags?.augmentation || mlflowAugmentation);
+            } catch (err) {
+                setMessage(`✗ Error cargando configuración: ${err.message}`);
+            } finally {
+                setInitialLoading(false);
+            }
+        };
+
+        loadConfig();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -111,7 +178,12 @@ export default function TrainConfigForm() {
                     },
                 },
             };
-            console.log("Config:", config);
+            const res = await fetch("http://localhost:8000/config/train", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(config),
+            });
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
             setMessage("✓ Configuración guardada");
         } catch (error) {
             setMessage("Error al guardar la configuración");

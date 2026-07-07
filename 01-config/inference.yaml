@@ -1,0 +1,4 @@
+model_path: 04-models/yolo26n.pt
+confidence: 27
+iou: 50
+ttaenabled: false

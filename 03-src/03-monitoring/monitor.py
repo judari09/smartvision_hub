@@ -1,6 +1,4 @@
-"""
-Exportador Prometheus para monitoreo de inferencia YOLO y recursos del sistema.
-"""
+"""Prometheus monitoring utilities for YOLO inference and system resources."""
 
 import time
 
@@ -22,7 +20,14 @@ gpu_power = Gauge("system_gpu_power_watts", "Consumo GPU (W)", ["gpu_id"])
 
 
 def export_inference_metrics(results):
-    """Exporta métricas de inferencia YOLO a Prometheus."""
+    """
+    Export YOLO inference metrics to Prometheus.
+
+    Parameters
+    ----------
+    results : list
+        Result objects returned by Ultralytics after inference.
+    """
     if not results:
         return
     r = results[0]
@@ -37,7 +42,14 @@ def export_inference_metrics(results):
 
 
 def export_system_metrics():
-    """Exporta métricas de recursos del sistema a Prometheus."""
+    """
+    Export CPU, RAM, and GPU metrics to Prometheus.
+
+    Notes
+    -----
+    This function relies on the Ultralytics system logger to collect runtime
+    metrics from the local environment.
+    """
     logger = SystemLogger()
     metrics = logger.get_metrics()
     cpu_usage.set(metrics["cpu"])

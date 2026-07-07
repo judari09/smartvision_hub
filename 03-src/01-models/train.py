@@ -24,6 +24,19 @@ DATA_YAML = REPO_ROOT / "01-config" / "dataset.yaml"
 
 
 def load_yaml_config(config_path: Path) -> dict:
+    """
+    Load a YAML configuration file from disk.
+
+    Parameters
+    ----------
+    config_path : Path
+        Path to the YAML file to load.
+
+    Returns
+    -------
+    dict
+        Parsed configuration dictionary.
+    """
     with config_path.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
@@ -47,16 +60,14 @@ MLFLOW_CFG["run_name"] = TRAIN_CFG.get("name", MLFLOW_CFG.get("run_name"))
 # ── Pipeline de aumentado Albumentations ─────────────────────────────────────
 def build_augmentation_pipeline() -> list:
     """
-    Augmentaciones realistas para detección de placas en entornos viales.
+    Build a realistic augmentation pipeline for vehicle plate detection.
 
-    Escenarios cubiertos:
-    - Desenfoque por movimiento y vibración de cámara
-    - Condiciones climáticas: lluvia, niebla, destello solar
-    - Variaciones de iluminación: noche, contraluz, sobrexposición
-    - Ruido de sensor: cámaras de seguridad de bajo costo, alta ISO
-    - Compresión JPEG de grabaciones y transmisiones en baja calidad
-    - Perspectiva oblicua: cámaras en ángulo lateral o superior
-    - Oclusiones parciales: objetos, suciedad, vehículos superpuestos
+    Returns
+    -------
+    list
+        Sequence of Albumentations transforms that simulate blur, weather,
+        illumination changes, sensor noise, compression artifacts, perspective,
+        and partial occlusions.
     """
     return [
         # ── Desenfoque ───────────────────────────────────────────────────────
@@ -143,11 +154,12 @@ def build_augmentation_pipeline() -> list:
 # ── Setup MLflow ─────────────────────────────────────────────────────────────
 def configure_mlflow() -> None:
     """
-    Establece variables de entorno y activa la integración automática de
-    Ultralytics con MLflow.
+    Configure MLflow integration for the training run.
 
-    El callback nativo de Ultralytics reutiliza el active_run() si ya existe,
-    por lo que arrancar el run aquí permite añadir tags antes del entrenamiento.
+    Notes
+    -----
+    The Ultralytics MLflow callback reuses the active run when one already
+    exists, so the run is started here before training begins.
     """
     os.environ["MLFLOW_BACKEND_STORE_URI"] = MLFLOW_CFG["backend_store_uri"]
     os.environ["MLFLOW_EXPERIMENT_NAME"] = MLFLOW_CFG["experiment_name"]
@@ -160,6 +172,14 @@ def configure_mlflow() -> None:
 
 # ── Entrenamiento ─────────────────────────────────────────────────────────────
 def train() -> None:
+    """
+    Train the YOLO model and register the resulting artifact in MLflow.
+
+    Notes
+    -----
+    The training configuration is loaded from the YAML files and the resulting
+    model is registered in the MLflow model registry after training completes.
+    """
     configure_mlflow()
 
     # Arrancar el run manualmente para poder asociar tags personalizados.
@@ -184,7 +204,8 @@ def train() -> None:
 
         # Registrar en el Model Registry
         registered_model = mlflow.register_model(
-            model_uri=model_uri, name=MLFLOW_CFG["name_registry"]  # Nombre en el registry
+            model_uri=model_uri,
+            name=MLFLOW_CFG["name_registry"],  # Nombre en el registry
         )
 
         print(f"Modelo registrado: {registered_model.name}")

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./flowconfigform.css";
 
 export default function FlowConfigForm() {
@@ -18,13 +18,84 @@ export default function FlowConfigForm() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
+    const [initialLoading, setInitialLoading] = useState(true);
+
+    const formatClassMapToText = (classMap) => {
+        if (!classMap) return "";
+        return Object.entries(classMap)
+            .map(([k, v]) => `${k}:${v}`)
+            .join("\n");
+    };
+
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                setInitialLoading(true);
+                const res = await fetch("http://localhost:8000/config/flow");
+                if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+                const data = await res.json();
+                const prep = data.prepare || {};
+                const split = data.split || {};
+                setPInputDir(prep.input_dir || "");
+                setPOutDir(prep.output_dir || "");
+                setPImagesDir(prep.images_dir || "");
+                setPClassesText(formatClassMapToText(prep.class_map));
+                setPDefaultClassId(prep.default_class_id ?? "");
+                setPPolygon4ptAsBbox(Boolean(prep.polygon_4pt_as_bbox));
+
+                setSImagesDir(split.images || "");
+                setSLabelsDir(split.labels || "");
+                setSTrainDir(split.train || "");
+                setSValDir(split.val || "");
+                setSSplitRatio(split.split_ratio ?? "");
+            } catch (err) {
+                setMessage(`✗ Error cargando configuración: ${err.message}`);
+            } finally {
+                setInitialLoading(false);
+            }
+        };
+
+        loadConfig();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage("");
 
         try {
-            // Aquí va la lógica de envío o guardado de la configuración.
+            const config = {
+                prepare: {
+                    input_dir: pInputDir,
+                    output_dir: pOutputDir,
+                    images_dir: pImagesDir,
+                    class_map: pClassesText
+                        .split("\n")
+                        .map((l) => l.trim())
+                        .filter(Boolean)
+                        .reduce((acc, line) => {
+                            const [k, v] = line.split(":").map((s) => s.trim());
+                            if (k && v !== undefined) acc[k] = isNaN(Number(v)) ? v : Number(v);
+                            return acc;
+                        }, {}),
+                    default_class_id: pDefaultClassId === "" ? null : Number(pDefaultClassId),
+                    polygon_4pt_as_bbox: Boolean(pPolygon4ptAsBbox),
+                },
+                split: {
+                    images: sImagesDir,
+                    labels: sLabelsDir,
+                    train: sTrainDir,
+                    val: sValDir,
+                    split_ratio: parseFloat(sSplitRatio),
+                },
+            };
+
+            const res = await fetch("http://localhost:8000/config/flow", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(config),
+            });
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
             setMessage("✓ Configuración guardada");
         } catch (error) {
             setMessage("Error al guardar la configuración");
@@ -70,7 +141,7 @@ export default function FlowConfigForm() {
                         />
                     </li>
                     <li>
-                        <label htmlFor="images_dir">Carpeta de las imagenes crudas</label>
+                        <label htmlFor="images_dir">Carpeta de las imagenes crudas a procesar</label>
                         <input
                             type="text"
                             id="images_dir"

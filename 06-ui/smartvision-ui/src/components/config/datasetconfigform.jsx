@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./datasetconfigform.css";
 
 export default function DatasetConfigForm() {
@@ -6,6 +6,41 @@ export default function DatasetConfigForm() {
     const [classesText, setClassesText] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+
+    const [initialLoading, setInitialLoading] = useState(true);
+
+    // Formatear names (array o dict) a texto multilinea 'id:name' por linea
+    const formatNamesToText = (names) => {
+        if (!names) return "";
+        if (Array.isArray(names)) {
+            return names.map((n, i) => `${i}:${n}`).join("\n");
+        }
+        if (typeof names === "object") {
+            const keys = Object.keys(names).sort((a, b) => Number(a) - Number(b));
+            return keys.map((k) => `${k}:${names[k]}`).join("\n");
+        }
+        return "";
+    };
+
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                setInitialLoading(true);
+                setMessage("");
+                const res = await fetch("http://localhost:8000/config/dataset");
+                if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+                const data = await res.json();
+                setDatasetPath(data.path || "");
+                setClassesText(formatNamesToText(data.names));
+            } catch (err) {
+                setMessage(`✗ Error cargando configuración: ${err.message}`);
+            } finally {
+                setInitialLoading(false);
+            }
+        };
+
+        loadConfig();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,7 +69,7 @@ export default function DatasetConfigForm() {
                 val: "data/dataset/val",
                 names: classesDict,
             };
-
+            
             const response = await fetch("http://localhost:8000/config/dataset", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -89,7 +124,7 @@ export default function DatasetConfigForm() {
                         />
                     </li>
                 </ul>
-                <button type="submit" className="dataset-config-form-button" disabled={loading}>
+                <button type="submit" className="dataset-config-form-button" disabled={loading || initialLoading}>
                     {loading ? "Guardando..." : "Guardar Configuración"}
                 </button>
                 {message && <div className={`message ${message.startsWith("✓") ? "success" : "error"}`}>{message}</div>}

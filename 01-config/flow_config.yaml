@@ -1,7 +1,7 @@
 prepare:
   input_dir: data/raw
   output_dir: data/prepared
-  images_dir: images_prueba
+  images_dir: images_prueba_1
   class_map:
     car: 0
     motorcycle: 1

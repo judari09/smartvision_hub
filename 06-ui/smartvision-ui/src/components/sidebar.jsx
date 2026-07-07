@@ -2,20 +2,20 @@ import { useState } from "react";
 import "./sidebar.css";
 
 import {
-  ChevronDown,
-  Home,
-  LogOut,
-  Menu,
-  Settings,
-  Users,
-  BrainCircuit,
-  SportShoe,
-  Database,
-  Wind
+    BrainCircuit,
+    ChevronDown,
+    Database,
+    Home,
+    Menu,
+    Settings,
+    SportShoe,
+    Wind
 } from "lucide-react";
 
 export default function Sidebar({ selectedPage, onNavigate }) {
+  // Toggle the collapsed state of the navigation rail.
   const [collapsed, setCollapsed] = useState(false);
+  // Controls whether the configuration submenu is expanded.
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const navigate = (page) => {

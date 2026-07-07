@@ -1,11 +1,61 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./inferenceconfigwidget.css";
+
 export default function InferenceConfigWidget() {
     const [expanded, setExpanded] = useState(false);
+    const [modelPath, setModelPath] = useState("");
     const [confValue, setConfValue] = useState(50);
     const [iouValue, setIouValue] = useState(50);
     const [ttaenabled, setTtaEnabled] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                const res = await fetch("http://localhost:8000/config/inference");
+                if (!res.ok) return;
+                const data = await res.json();
+                setModelPath(data.model_path || "");
+                setConfValue(data.confidence ?? 50);
+                setIouValue(data.iou ?? 50);
+                setTtaEnabled(Boolean(data.ttaenabled));
+            } catch (error) {
+                console.error("Error cargando configuración de inferencia:", error);
+            }
+        };
+
+        loadConfig();
+    }, []);
+
+    const handleSave = async () => {
+        setLoading(true);
+        setMessage("");
+
+        try {
+            const payload = {
+                model_path: modelPath,
+                confidence: Number(confValue),
+                iou: Number(iouValue),
+                ttaenabled: Boolean(ttaenabled),
+            };
+
+            const res = await fetch("http://localhost:8000/config/inference", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+            setMessage("✓ Configuración guardada");
+        } catch (error) {
+            setMessage(`✗ Error: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="inference-config-widget-container">
             <div className="inference-config-widget-header">
@@ -16,7 +66,7 @@ export default function InferenceConfigWidget() {
                         e.preventDefault();
                         setExpanded(!expanded);
                     }}
-                    >
+                >
                     <ChevronDown
                         size={16}
                         className={expanded ? "submenu-toggle rotated" : "submenu-toggle"}
@@ -26,7 +76,13 @@ export default function InferenceConfigWidget() {
             <div className={`inference-config-widget-content ${expanded ? "expanded" : ""}`}>
                 <div className="inference-config-model-path">
                     <label htmlFor="model-path">Ruta del modelo</label>
-                    <input type="text" id="model-path" placeholder="Ingrese la ruta del modelo" />
+                    <input
+                        type="text"
+                        id="model-path"
+                        placeholder="Ingrese la ruta del modelo"
+                        value={modelPath}
+                        onChange={(e) => setModelPath(e.target.value)}
+                    />
                 </div>
                 <div className="inference-confidence-slider">
                     <div className="slider-label-row">
@@ -57,11 +113,17 @@ export default function InferenceConfigWidget() {
                 <div className="inference-tta-toggle">
                     <button
                         className={`switch ${ttaenabled ? "active" : ""}`}
-                        onClick={() => setTtaEnabled((prev) => !prev)}>
+                        onClick={() => setTtaEnabled((prev) => !prev)}
+                    >
                         <span className="thumb"></span>
                     </button>
                     <p>Habilitar Test Time Augmentation</p>
                 </div>
+
+                <button type="button" className="inference-config-save-button" onClick={handleSave} disabled={loading}>
+                    {loading ? "Guardando..." : "Guardar Configuración"}
+                </button>
+                {message && <div className={`message ${message.startsWith("✓") ? "success" : "error"}`}>{message}</div>}
             </div>
         </div>
     );

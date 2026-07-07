@@ -8,15 +8,76 @@ body{
   font-family:Arial, sans-serif;
 }
 
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 1.8rem;
+  border: none;
+  border-radius: 999px;
+  background: #36ecde;
+  color: #0f172a;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 18px 40px rgba(54, 236, 222, 0.18);
+}
+
+button svg,
+.button svg {
+  display: block;
+}
+
+button:hover,
+.button:hover,
+button:focus-visible,
+.button:focus-visible {
+  transform: translateY(-1px);
+  background-color: #2ac9ba;
+  outline: none;
+}
+
+.button.secondary-button {
+  background: #f3f4f6;
+  color: #111827;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+button:disabled,
+.button:disabled,
+button[disabled],
+.button[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.inference-image-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.inference-image-upload-row label:first-child {
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .app-container{
   display:flex;
   min-height:100vh;
+  width:100%;
+  overflow:hidden;
 }
-
 
 /* CONTENIDO */
 .main-content{
-  flex:1;
+  flex:1 1 auto;
+  min-width:0;
   padding:40px;
   background:#f3f4f6;
 }

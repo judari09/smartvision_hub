@@ -1,9 +1,6 @@
-path: . # dataset root dir
-train: data/dataset/train # train images (relative to 'path') 3516 images
-val: data/dataset/val # val images (relative to 'path') 276 images
-
-# Classes
+path: C:\Users\JUAN DAVID\Documents\PROYECTOS PERSONALES\smartvision_hub\02-data
+train: data/dataset/train
+val: data/dataset/val
 names:
-  0: back_bumper
-  1: back_door
-  2: back_glass
+  '0': car
+  '1': bike

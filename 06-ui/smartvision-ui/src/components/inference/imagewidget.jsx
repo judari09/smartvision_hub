@@ -1,41 +1,35 @@
 import { ZoomIn, ZoomOut } from 'lucide-react';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./imagewidget.css";
 
-export default function ImageWidget({ imageSrc, processedSrc = imageSrc, points = [] }) {
+export default function ImageWidget({ imageSrc, processedSrc = imageSrc, boxes = [], points = [] }) {
     const [expanded, setExpanded] = useState(false);
+    const imageRef = useRef(null);
 
-    const getPointStyle = (point) => {
-        const left = typeof point.x === 'number'
-          ? (point.x <= 1 ? point.x * 100 : point.x)
-          : 0;
-        const top = typeof point.y === 'number'
-          ? (point.y <= 1 ? point.y * 100 : point.y)
-          : 0;
+    const getBoxStyle = (box) => {
+        const bbox = Array.isArray(box?.bbox) ? box.bbox : null;
+        const imageElement = imageRef.current;
+        if (!bbox || bbox.length < 4 || !imageElement) {
+            return {};
+        }
 
-        return {
-            left: `${left}%`,
-            top: `${top}%`,
-        };
-    };
+        const rect = imageElement.getBoundingClientRect();
+        const width = rect.width || imageElement.clientWidth || imageElement.naturalWidth || 1;
+        const height = rect.height || imageElement.clientHeight || imageElement.naturalHeight || 1;
 
-    const getBoxStyle = (points) => {
-        const xs = points.map((point) => (typeof point.x === 'number' ? (point.x <= 1 ? point.x * 100 : point.x) : 0));
-        const ys = points.map((point) => (typeof point.y === 'number' ? (point.y <= 1 ? point.y * 100 : point.y) : 0));
-        const left = Math.min(...xs);
-        const top = Math.min(...ys);
-        const width = Math.max(...xs) - left;
-        const height = Math.max(...ys) - top;
+        const [x1, y1, x2, y2] = bbox;
+        const left = (Math.min(x1, x2) / width) * 100;
+        const top = (Math.min(y1, y2) / height) * 100;
+        const boxWidth = (Math.abs(x2 - x1) / width) * 100;
+        const boxHeight = (Math.abs(y2 - y1) / height) * 100;
 
         return {
             left: `${left}%`,
             top: `${top}%`,
-            width: `${width}%`,
-            height: `${height}%`,
+            width: `${boxWidth}%`,
+            height: `${boxHeight}%`,
         };
     };
-
-    const drawBox = points.length === 4;
 
     return (
         <div className="imagewidget-container">
@@ -59,10 +53,20 @@ export default function ImageWidget({ imageSrc, processedSrc = imageSrc, points 
                 <div className="image-card">
                         <div className="image-card-label">processed</div>
                         <div className="processed-overlay-wrapper">
-                            <img src={processedSrc} alt="processed" />
-                            {points.length > 0 && (
+                            <img ref={imageRef} src={processedSrc} alt="processed" />
+                            {(boxes.length > 0 || points.length > 0) && (
                                 <div className="image-overlay">
-                                    <div className="image-box" style={getBoxStyle(points)} />
+                                    {boxes.map((box, index) => (
+                                        <div key={box.key ?? `${index}`} className="image-box" style={getBoxStyle(box)}>
+                                            <span className="image-box-label">
+                                                {box.label ?? `det ${index + 1}`}
+                                                {typeof box.confidence === "number" ? ` · ${(box.confidence * 100).toFixed(0)}%` : ""}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    {boxes.length === 0 && points.length > 0 && (
+                                        <div className="image-box" style={getBoxStyle(points)} />
+                                    )}
                                 </div>
                             )}
                         </div>
